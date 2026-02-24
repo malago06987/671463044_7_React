@@ -1,36 +1,40 @@
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import { Routes, Route, Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import PostDetail from "./pages/PostDetail";
-import Admin from "./pages/Admin";
-import NotFound from "./pages/NotFound";
+// Public
+import Home from "./pages/all/Home";
+import PostDetail from "./pages/all/postDetail";
 
-function App() {
+// Admin
+import Dashboard from "./pages/admin/dashboard";
+import Posts from "./pages/admin/posts";
+import CategoriesAdmin from "./pages/admin/categories";
+import Users from "./pages/admin/users";
+
+function NotFound() {
   return (
-    <>
-      <Navbar bg="dark" data-bs-theme="dark" className="mb-3">
-        <Container>
-          <Navbar.Brand as={Link} to="/">Webboard</Navbar.Brand>
-          <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/">หน้าแรก</Nav.Link>
-            <Nav.Link as={Link} to="/admin">Admin</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-
-      <Container>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/post/:id" element={<PostDetail />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Container>
-    </>
+    <div className="container py-5">
+      <h2>404</h2>
+      <p className="text-muted">หาไม่เจอ</p>
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Routes>
+      {/* PUBLIC */}
+      <Route path="/" element={<Home />} />
+      <Route path="/post/:id" element={<PostDetail />} />
+
+      {/* ADMIN */}
+      <Route path="/admin" element={<Dashboard />} />
+      <Route path="/admin/posts" element={<Posts />} />
+      <Route path="/admin/categories" element={<CategoriesAdmin />} />
+      <Route path="/admin/users" element={<Users />} />
+
+      {/* 404 */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
