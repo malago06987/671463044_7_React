@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 // Public
 import Home from "./pages/all/Home";
 import Category from "./pages/all/Category";
+import Login from "./pages/login/Login";
+import Register from "./pages/login/Register";
 // Admin
 
 function NotFound() {
@@ -21,6 +23,8 @@ export default function App() {
       {/* PUBLIC */}
       <Route path="/" element={<Home />} />
  <Route path="/category/:id" element={<Category />} />
+ <Route path="/login" element={<Login />} />
+<Route path="/register" element={<Register />} />
       {/* ADMIN */}
 
       {/* 404 */}

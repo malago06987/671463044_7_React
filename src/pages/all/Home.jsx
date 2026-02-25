@@ -4,7 +4,7 @@ import Axios from "axios";
 import Navbar from "../../components/include/Navbar";
 import Search from "../../components/others/search";
 import PostList from "../../components/post/postList";
-
+import Footer from "../../components/include/Footer";
 // ถ้ามึงยังไม่มี Paginator component ให้กูทำให้ต่อด้านล่าง
 import Paginator from "../../components/others/paginator";
 
@@ -89,6 +89,8 @@ const [view, setView] = useState("list"); // "grid" | "list"
           <p className="text-muted mt-3">ยังไม่มีโพสต์ หรือไม่พบผลลัพธ์</p>
         )}
       </div>
+
+      <Footer />
     </>
   );
 }

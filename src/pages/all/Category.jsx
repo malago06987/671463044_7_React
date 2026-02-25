@@ -4,7 +4,7 @@ import Axios from "axios";
 
 import Navbar from "../../components/include/Navbar";
 import PostList from "../../components/post/postList";
-
+import Footer from "../../components/include/Footer";
 export default function Category() {
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
@@ -46,6 +46,8 @@ export default function Category() {
           <p className="text-muted mt-3">หมวดนี้ยังไม่มีโพสต์</p>
         )}
       </div>
+    
+      <Footer />
     </>
   );
 }
