@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Register() {
-  const [nickName, setNickName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState("unknown");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -14,23 +18,24 @@ export default function Register() {
     try {
       const res = await axios.post(
         "http://localhost/671463044_7_REACT_API/api/auth/register.php",
-        { nickName, email, password },
+        { userName, firstName, lastName, gender, email, password },
         { withCredentials: true }
       );
 
-      if (res.data.ok) {
+      if (res.data.status === "success") {
+        alert("สมัครสมาชิกสำเร็จ!");
         navigate("/login");
       } else {
-        alert("สมัครสมาชิกไม่สำเร็จ");
+        alert(res.data.message || "สมัครสมาชิกไม่สำเร็จ");
       }
     } catch (err) {
       console.error(err);
-      alert("เกิดข้อผิดพลาด");
+      alert("เกิดข้อผิดพลาด (เช็ค CORS/API/Console)");
     }
   };
 
   return (
-    <div className="container py-5" style={{ maxWidth: "400px" }}>
+    <div className="container py-5" style={{ maxWidth: 400 }}>
       <h3 className="mb-4">สมัครสมาชิก</h3>
 
       <form onSubmit={handleSubmit}>
@@ -38,10 +43,44 @@ export default function Register() {
           <label className="form-label">ชื่อผู้ใช้</label>
           <input
             className="form-control"
-            value={nickName}
-            onChange={(e) => setNickName(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">ชื่อจริง</label>
+          <input
+            className="form-control"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="(ไม่ใส่ก็ได้)"
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">นามสกุล</label>
+          <input
+            className="form-control"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="(ไม่ใส่ก็ได้)"
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">เพศ</label>
+          <select
+            className="form-select"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <option value="unknown">ไม่ระบุ</option>
+            <option value="male">ชาย</option>
+            <option value="female">หญิง</option>
+            <option value="other">อื่น ๆ</option>
+          </select>
         </div>
 
         <div className="mb-3">
@@ -66,7 +105,9 @@ export default function Register() {
           />
         </div>
 
-        <button className="btn btn-success w-100">สมัครสมาชิก</button>
+        <button className="btn btn-success w-100" type="submit">
+          สมัครสมาชิก
+        </button>
       </form>
     </div>
   );

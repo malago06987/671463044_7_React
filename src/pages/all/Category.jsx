@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 
-import Navbar from "../../components/include/Navbar";
 import PostList from "../../components/post/postList";
 import Footer from "../../components/include/Footer";
 export default function Category() {
@@ -34,7 +33,6 @@ export default function Category() {
 
   return (
     <>
-      <Navbar categories={categories} />
 
       <div className="container py-4">
         <h2 className="mb-2">{categoryName}</h2>

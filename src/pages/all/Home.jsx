@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import Axios from "axios";
-
-import Navbar from "../../components/include/Navbar";
 import Search from "../../components/others/search";
 import PostList from "../../components/post/postList";
 import Footer from "../../components/include/Footer";
@@ -66,7 +64,6 @@ const [view, setView] = useState("list"); // "grid" | "list"
 
   return (
     <>
-      <Navbar categories={categories} user={null} onLogout={null} />
 
       <div className="container py-4">
         <div className="d-flex align-items-center justify-content-between mb-3">

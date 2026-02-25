@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
+const API = "http://localhost/671463044_7_REACT_API/api";
+
 export default function Navbar({ user, categories = [], onLogout }) {
+  const profileSrc = user?.userImage ? `${API}/${user.userImage}` : null;
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div className="container">
@@ -54,7 +58,10 @@ export default function Navbar({ user, categories = [], onLogout }) {
                 ) : (
                   categories.map((c) => (
                     <li key={c.categoriesID}>
-                      <Link className="dropdown-item" to={`/category/${c.categoriesID}`}>
+                      <Link
+                        className="dropdown-item"
+                        to={`/category/${c.categoriesID}`}
+                      >
                         {c.name}
                       </Link>
                     </li>
@@ -81,7 +88,10 @@ export default function Navbar({ user, categories = [], onLogout }) {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="btn btn-outline-light btn-sm ms-lg-2 mt-2 mt-lg-0" to="/register">
+                  <Link
+                    className="btn btn-outline-light btn-sm ms-lg-2 mt-2 mt-lg-0"
+                    to="/register"
+                  >
                     สมัครสมาชิก
                   </Link>
                 </li>
@@ -89,14 +99,35 @@ export default function Navbar({ user, categories = [], onLogout }) {
             ) : (
               <li className="nav-item dropdown">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle d-flex align-items-center gap-2"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   onClick={(e) => e.preventDefault()}
                 >
-                  👤 {user.userName || "ผู้ใช้"}
+                  {profileSrc ? (
+                    <img
+                      src={profileSrc}
+                      alt="profile"
+                      width="28"
+                      height="28"
+                      className="rounded-circle"
+                      style={{ objectFit: "cover" }}
+                      onError={(e) => {
+                        // ถ้าไฟล์หาย/พาธผิด ให้ fallback เป็นไอคอน
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <span
+                      className="rounded-circle bg-secondary d-inline-flex justify-content-center align-items-center"
+                      style={{ width: 28, height: 28, fontSize: 14 }}
+                    >
+                      👤
+                    </span>
+                  )}
+                  <span>{user.userName || "ผู้ใช้"}</span>
                 </a>
 
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -110,7 +141,9 @@ export default function Navbar({ user, categories = [], onLogout }) {
                       กระทู้ของฉัน
                     </Link>
                   </li>
-                  <li><hr className="dropdown-divider" /></li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
                   <li>
                     <button
                       className="dropdown-item text-danger"
