@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 // Public
 import Home from "./pages/all/Home";
-
+import Category from "./pages/all/Category";
 // Admin
 
 function NotFound() {
@@ -20,6 +20,7 @@ export default function App() {
     <Routes>
       {/* PUBLIC */}
       <Route path="/" element={<Home />} />
+<Route path="/category/:id" element={<Category />} />
 
       {/* ADMIN */}
 

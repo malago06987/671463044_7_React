@@ -20,7 +20,7 @@ export default function Home() {
       .then((res) => setPosts(Array.isArray(res.data) ? res.data : []))
       .catch((err) => console.error(err));
   }, []);
-
+const [view, setView] = useState("list"); // "grid" | "list"
   // 2) ค้นหา (filter)
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
