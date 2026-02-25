@@ -20,8 +20,7 @@ export default function App() {
     <Routes>
       {/* PUBLIC */}
       <Route path="/" element={<Home />} />
-<Route path="/category/:id" element={<Category />} />
-
+ <Route path="/category/:id" element={<Category />} />
       {/* ADMIN */}
 
       {/* 404 */}

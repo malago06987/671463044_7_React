@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Axios from "axios";
 
-import Navbar from "../../components/include/navbar";
+import Navbar from "../../components/include/Navbar";
 import Search from "../../components/others/search";
 import PostList from "../../components/post/postList";
 
@@ -13,13 +13,26 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+const [categories, setCategories] = useState([]);
 
-  // 1) ดึงข้อมูลโพสต์
-  useEffect(() => {
-    Axios.get("http://localhost/671463044_7_REACT_API/api/post/get.php")
-      .then((res) => setPosts(Array.isArray(res.data) ? res.data : []))
-      .catch((err) => console.error(err));
-  }, []);
+useEffect(() => {
+
+  // ดึงหมวดหมู่
+  fetch("http://localhost/671463044_7_REACT_API/api/categories/get.php")
+    .then((r) => r.json())
+    .then((data) =>
+      setCategories(Array.isArray(data) ? data : data.data || [])
+    )
+    .catch(() => setCategories([]));
+
+  // ดึงโพสต์
+  Axios.get("http://localhost/671463044_7_REACT_API/api/post/get.php")
+    .then((res) =>
+      setPosts(Array.isArray(res.data) ? res.data : [])
+    )
+    .catch((err) => console.error(err));
+
+}, []);
 const [view, setView] = useState("list"); // "grid" | "list"
   // 2) ค้นหา (filter)
   const filtered = useMemo(() => {
@@ -53,7 +66,7 @@ const [view, setView] = useState("list"); // "grid" | "list"
 
   return (
     <>
-      <Navbar />
+      <Navbar categories={categories} user={null} onLogout={null} />
 
       <div className="container py-4">
         <div className="d-flex align-items-center justify-content-between mb-3">
