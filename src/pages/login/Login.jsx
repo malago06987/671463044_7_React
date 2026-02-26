@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
+export default function Login({ onLoginSuccess }) {
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -13,14 +13,17 @@ export default function Login() {
     try {
       const res = await axios.post(
         "http://localhost/671463044_7_REACT_API/api/auth/login.php",
-        { email, password },
+        { userName, password },
         { withCredentials: true }
       );
 
-      if (res.data.ok) {
+      if (res.data.status === "success") {
+        // ✅ ส่ง user ให้ App setUser ทันที (ต้องให้ PHP ส่ง user กลับมาด้วย)
+        onLoginSuccess?.(res.data.user);
+
         navigate("/");
       } else {
-        alert("เข้าสู่ระบบไม่สำเร็จ");
+        alert(res.data.message || "เข้าสู่ระบบไม่สำเร็จ");
       }
     } catch (err) {
       console.error(err);
@@ -34,12 +37,11 @@ export default function Login() {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Email</label>
+          <label className="form-label">userName</label>
           <input
             className="form-control"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
         </div>
@@ -55,7 +57,9 @@ export default function Login() {
           />
         </div>
 
-        <button className="btn btn-primary w-100">เข้าสู่ระบบ</button>
+        <button className="btn btn-primary w-100" type="submit">
+          เข้าสู่ระบบ
+        </button>
       </form>
     </div>
   );

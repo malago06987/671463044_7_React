@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Axios from "axios";
+
 import Search from "../../components/others/search";
 import PostList from "../../components/post/postList";
 import Footer from "../../components/include/Footer";
@@ -14,14 +15,6 @@ export default function Home() {
 const [categories, setCategories] = useState([]);
 
 useEffect(() => {
-
-  // ดึงหมวดหมู่
-  fetch("http://localhost/671463044_7_REACT_API/api/categories/get.php")
-    .then((r) => r.json())
-    .then((data) =>
-      setCategories(Array.isArray(data) ? data : data.data || [])
-    )
-    .catch(() => setCategories([]));
 
   // ดึงโพสต์
   Axios.get("http://localhost/671463044_7_REACT_API/api/post/get.php")

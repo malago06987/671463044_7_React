@@ -57,16 +57,21 @@ export default function PostCard({ post }) {
         </div>
 
         {/* สถิติ */}
-        <div className="col-12 col-md-2 text-md-end">
-          <span className="badge bg-light text-dark me-2">
-            👍 {post.likeCount || 0}
-          </span>
-          {post.commentCount !== undefined && (
-            <span className="badge bg-light text-dark">
-              💬 {post.commentCount}
-            </span>
-          )}
-        </div>
+<div className="col-12 col-md-2 text-md-end">
+  <span className="badge bg-light text-dark me-2">
+    👍 {post.likes ?? 0}
+  </span>
+
+  <span className="badge bg-light text-dark me-2">
+    👎 {post.dislikes ?? 0}
+  </span>
+
+  {post.commentCount !== undefined && (
+    <span className="badge bg-light text-dark">
+      💬 {post.commentCount}
+    </span>
+  )}
+</div>
 
       </div>
     </Link>

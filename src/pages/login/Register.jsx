@@ -9,16 +9,26 @@ export default function Register() {
   const [gender, setGender] = useState("unknown");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userImage, setUserImage] = useState(null);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append("userName", userName);
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("gender", gender);
+    formData.append("email", email);
+    formData.append("password", password);
+    if (userImage) formData.append("userImage", userImage);
+
     try {
       const res = await axios.post(
         "http://localhost/671463044_7_REACT_API/api/auth/register.php",
-        { userName, firstName, lastName, gender, email, password },
+        formData,
         { withCredentials: true }
       );
 
@@ -30,7 +40,7 @@ export default function Register() {
       }
     } catch (err) {
       console.error(err);
-      alert("เกิดข้อผิดพลาด (เช็ค CORS/API/Console)");
+      alert("เกิดข้อผิดพลาด");
     }
   };
 
@@ -38,7 +48,7 @@ export default function Register() {
     <div className="container py-5" style={{ maxWidth: 400 }}>
       <h3 className="mb-4">สมัครสมาชิก</h3>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="mb-3">
           <label className="form-label">ชื่อผู้ใช้</label>
           <input
@@ -55,7 +65,6 @@ export default function Register() {
             className="form-control"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            placeholder="(ไม่ใส่ก็ได้)"
           />
         </div>
 
@@ -65,7 +74,6 @@ export default function Register() {
             className="form-control"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            placeholder="(ไม่ใส่ก็ได้)"
           />
         </div>
 
@@ -81,6 +89,16 @@ export default function Register() {
             <option value="female">หญิง</option>
             <option value="other">อื่น ๆ</option>
           </select>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">รูปโปรไฟล์</label>
+          <input
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={(e) => setUserImage(e.target.files[0])}
+          />
         </div>
 
         <div className="mb-3">
