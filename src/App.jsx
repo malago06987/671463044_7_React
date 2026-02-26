@@ -12,6 +12,12 @@ import Register from "./pages/login/Register";
 import PostDetail from "./pages/all/postDetail";
 import MyPost from "./pages/all/my_post";
 import Profile from "./pages/all/profile";
+
+import AdminLayout from "./pages/admin/AdminLayout";
+import Dashboard from "./pages/admin/dashboard";
+import AdminCategories from "./pages/admin/categories";
+import AdminPosts from "./pages/admin/posts";
+import AdminUsers from "./pages/admin/users";
 function NotFound() {
   return (
     <div className="container py-5">
@@ -64,17 +70,25 @@ export default function App() {
   return (
     <>
       <Navbar user={user} categories={categories} onLogout={onLogout} />
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/category/:id" element={<Category />} />
+  <Route path="/login" element={<Login onLoginSuccess={loadUser} />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/post/:id" element={<PostDetail />} />
+  <Route path="/my-post" element={<MyPost />} />
+  <Route path="/profile" element={<Profile user={user} onLogout={onLogout} />} />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/category/:id" element={<Category />} />
-        <Route path="/login" element={<Login onLoginSuccess={loadUser} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/post/:id" element={<PostDetail />} />
-        <Route path="/my-post" element={<MyPost />} />
-        <Route path="/profile" element={<Profile user={user} onLogout={onLogout} />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+  {/* ✅ Admin nested routes */}
+<Route path="/admin" element={<AdminLayout />}>
+  <Route index element={<Dashboard />} />
+  <Route path="categories" element={<AdminCategories />} />
+  <Route path="posts" element={<AdminPosts />} />
+  <Route path="users" element={<AdminUsers />} />
+</Route>
+
+  <Route path="*" element={<NotFound />} />
+</Routes>
     </>
   );
 }

@@ -6,6 +6,10 @@ const API = "http://localhost/671463044_7_REACT_API/api";
 export default function Navbar({ user, categories = [], onLogout, onPostCreated }) {
   const profileSrc = user?.userImage ? `${API}/${user.userImage}` : null;
 
+  // ✅ เพิ่มแค่ส่วนแอดมิน: รองรับหลายชื่อฟิลด์กันหลอน
+  const isAdmin =
+    user?.role === "admin";
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -141,6 +145,21 @@ export default function Navbar({ user, categories = [], onLogout, onPostCreated 
                         กระทู้ของฉัน
                       </Link>
                     </li>
+
+                    {/* ✅ เพิ่มเมนู Admin เฉพาะแอดมิน */}
+                    {isAdmin && (
+                      <>
+                        <li>
+                          <hr className="dropdown-divider" />
+                        </li>
+                        <li>
+                          <Link className="dropdown-item text-warning fw-semibold" to="/admin">
+                          Admin Panel
+                          </Link>
+                        </li>
+                      </>
+                    )}
+
                     <li>
                       <hr className="dropdown-divider" />
                     </li>
@@ -160,7 +179,6 @@ export default function Navbar({ user, categories = [], onLogout, onPostCreated 
           </div>
         </div>
       </nav>
-
 
       <PostTopic categories={categories} user={user} onCreated={onPostCreated} />
     </>
