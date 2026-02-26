@@ -146,7 +146,6 @@ export default function Navbar({ user, categories = [], onLogout, onPostCreated 
                       </Link>
                     </li>
 
-                    {/* ✅ เพิ่มเมนู Admin เฉพาะแอดมิน */}
                     {isAdmin && (
                       <>
                         <li>
@@ -154,7 +153,7 @@ export default function Navbar({ user, categories = [], onLogout, onPostCreated 
                         </li>
                         <li>
                           <Link className="dropdown-item text-warning fw-semibold" to="/admin">
-                          Admin Panel
+                          หน้าต่างเเอดมิน
                           </Link>
                         </li>
                       </>

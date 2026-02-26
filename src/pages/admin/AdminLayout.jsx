@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 export default function AdminLayout() {
   return (
     <div className="container py-4">
-      <h3>Admin Panel</h3>
+      <h3>เเอดมิน</h3>
 
       <div className="mb-3 d-flex gap-2">
         <NavLink className="btn btn-outline-primary" to="/admin" end>

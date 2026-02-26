@@ -69,7 +69,12 @@ export default function App() {
 
   return (
     <>
-      <Navbar user={user} categories={categories} onLogout={onLogout} />
+      <Navbar
+  user={user}
+  categories={categories}
+  onLogout={onLogout}
+  onRefreshCategories={loadCategories}
+/>
 <Routes>
   <Route path="/" element={<Home />} />
   <Route path="/category/:id" element={<Category />} />
@@ -82,7 +87,10 @@ export default function App() {
   {/* ✅ Admin nested routes */}
 <Route path="/admin" element={<AdminLayout />}>
   <Route index element={<Dashboard />} />
-  <Route path="categories" element={<AdminCategories />} />
+<Route
+  path="categories"
+  element={<AdminCategories onRefreshCategories={loadCategories} />}
+/>
   <Route path="posts" element={<AdminPosts />} />
   <Route path="users" element={<AdminUsers />} />
 </Route>

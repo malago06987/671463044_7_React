@@ -14,33 +14,22 @@ export default function PostDetail() {
 
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // ✅ ใช้ตัวนี้เพื่อสั่งให้ CommentList reload หลังเพิ่ม/ลบ
   const [commentRefreshKey, setCommentRefreshKey] = useState(0);
 
-  // ✅ normalize ให้ใช้ชื่อมาตรฐานใน UI
   const normalizePost = (p) => ({
-    postID: p?.postID ?? p?.id ?? Number(id),
-    title: p?.title ?? p?.topicName ?? p?.postTopic ?? "",
-    content: p?.content ?? p?.postDetail ?? p?.detail ?? "",
-    category_name: p?.category_name ?? p?.categoryName ?? p?.category ?? "",
-    userName:
-      p?.userName ??
-      p?.username ??
-      p?.nickName ??
-      `${p?.firstName ?? ""} ${p?.lastName ?? ""}`.trim(),
-    userImage: p?.userImage ?? "",
-    img: p?.img ?? p?.postImage ?? p?.image ?? "",
+    postID: Number(p?.postID ?? p?.id ?? id),
+    title: p?.title ?? p?.topicName ?? "",
+    content: p?.content ?? p?.postDetail ?? "",
+    category_name: p?.category_name ?? p?.categoryName ?? "",
+    userName: p?.userName ?? p?.username ?? "",
     likes: Number(p?.likes ?? 0),
     dislikes: Number(p?.dislikes ?? 0),
-    createdAt: p?.created_at ?? p?.createdAt ?? "",
   });
 
   const fetchPost = useCallback(async () => {
     const res = await axios.get(`${API}/post/get_one.php?id=${id}`, {
       withCredentials: true,
     });
-
     const raw = res.data?.data ?? res.data?.post ?? res.data;
     setPost(normalizePost(raw));
   }, [id]);
@@ -91,52 +80,25 @@ export default function PostDetail() {
         <div className="card-body">
           <h3 className="card-title">{post.title || "-"}</h3>
 
-          <div className="text-muted mb-2 d-flex align-items-center gap-2">
-            {post.userImage && (
-              <img
-                src={post.userImage}
-                alt="user"
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-            )}
+          <div className="text-muted mb-2">
             หมวด: {post.category_name || "-"} | โดย: {post.userName || "-"}
           </div>
-
-          {post.img && (
-            <img
-              src={post.img}
-              alt={post.title}
-              style={{ width: "100%", borderRadius: 8, marginBottom: 12 }}
-            />
-          )}
 
           <p className="card-text" style={{ whiteSpace: "pre-wrap" }}>
             {post.content || ""}
           </p>
 
-          <div className="d-flex gap-2">
-            <Like
-              postID={post.postID}
-              likes={post.likes}
-              dislikes={post.dislikes}
-              onUpdated={(r) => {
-                setPost((p) => ({
-                  ...p,
-                  likes: r.likes,
-                  dislikes: r.dislikes,
-                }));
-              }}
-            />
-          </div>
+          <Like
+            postID={post.postID}
+            likes={post.likes}
+            dislikes={post.dislikes}
+            onUpdated={(r) =>
+              setPost((p) => ({ ...p, likes: r.likes, dislikes: r.dislikes }))
+            }
+          />
         </div>
       </div>
 
-      {/* ✅ Comments (แยก component แล้วจริง ๆ) */}
       <div className="card">
         <div className="card-body">
           <CommentForm
@@ -144,10 +106,7 @@ export default function PostDetail() {
             onCreated={() => setCommentRefreshKey((k) => k + 1)}
           />
 
-          <CommentList
-            postID={post.postID}
-            refreshKey={commentRefreshKey}
-          />
+          <CommentList postID={post.postID} refreshKey={commentRefreshKey} />
         </div>
       </div>
     </div>

@@ -60,7 +60,7 @@ const [view, setView] = useState("list"); // "grid" | "list"
 
       <div className="container py-4">
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h2 className="m-0">หน้าแรกเว็บบอร์ด</h2>
+          <h2 className="m-0">พันกะติป</h2>
           <span className="text-muted">ทั้งหมด: {filtered.length} โพสต์</span>
         </div>
 

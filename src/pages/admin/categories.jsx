@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
 const API = "http://localhost/671463044_7_REACT_API/api";
@@ -6,10 +6,34 @@ const API = "http://localhost/671463044_7_REACT_API/api";
 export default function AdminCategories() {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // ทำ client ที่ส่ง cookie/session ตลอด (สำคัญมากสำหรับ admin.php)
+  const api = useMemo(
+    () =>
+      axios.create({
+        baseURL: API,
+        withCredentials: true,
+      }),
+    []
+  );
+
+  const normalizeList = (payload) => {
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray(payload.data)) return payload.data;
+    return [];
+  };
 
   const load = async () => {
-    const res = await axios.get(`${API}/categories/get.php`);
-    setCategories(Array.isArray(res.data) ? res.data : res.data.data || []);
+    try {
+      // get.php ของ categories มักเป็น public ก็จริง แต่เอาไว้ให้ชัวร์
+      const res = await api.get(`/categories/get.php`);
+      setCategories(normalizeList(res.data));
+    } catch (err) {
+      console.error(err);
+      setCategories([]);
+      alert("โหลดหมวดหมู่ไม่สำเร็จ");
+    }
   };
 
   useEffect(() => {
@@ -18,17 +42,59 @@ export default function AdminCategories() {
 
   const addCategory = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return alert("กรอกชื่อก่อน");
+    const trimmed = name.trim();
+    if (!trimmed) return alert("กรอกชื่อก่อน");
 
-    await axios.post(`${API}/categories/create.php`, { name });
-    setName("");
-    load();
+    setLoading(true);
+    try {
+      const res = await api.post(`/categories/create.php`, { name: trimmed });
+
+      // รองรับ response แบบ {"status":"success"} / {"status":"error","message":"..."}
+      if (res.data?.status === "success") {
+        setName("");
+        await load();
+      } else {
+        alert(res.data?.message || "เพิ่มหมวดหมู่ไม่สำเร็จ");
+      }
+    } catch (err) {
+      const code = err?.response?.status;
+      const msg = err?.response?.data?.message;
+
+      if (code === 401) alert("ยังไม่ได้ล็อกอิน");
+      else if (code === 403) alert("ต้องเป็นแอดมินเท่านั้น");
+      else alert(msg || "เพิ่มหมวดหมู่ไม่สำเร็จ (เช็คชื่อซ้ำ/เซิร์ฟเวอร์)");
+
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const deleteCategory = async (id) => {
     if (!window.confirm("ลบจริงไหม")) return;
-    await axios.post(`${API}/categories/delete.php`, { categoriesID: id });
-    load();
+
+    setLoading(true);
+    try {
+      // ฝั่ง PHP มึงน่าจะอ่าน php://input เป็น JSON อยู่แล้ว (เหมือน create.php)
+      const res = await api.post(`/categories/delete.php`, { categoriesID: id });
+
+      if (res.data?.status === "success") {
+        await load();
+      } else {
+        alert(res.data?.message || "ลบไม่สำเร็จ");
+      }
+    } catch (err) {
+      const code = err?.response?.status;
+      const msg = err?.response?.data?.message;
+
+      if (code === 401) alert("ยังไม่ได้ล็อกอิน");
+      else if (code === 403) alert("ต้องเป็นแอดมินเท่านั้น");
+      else alert(msg || "ลบไม่สำเร็จ (อาจติด FK หรือเซิร์ฟเวอร์)");
+
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,18 +105,21 @@ export default function AdminCategories() {
         <input
           className="form-control"
           value={name}
+          disabled={loading}
           onChange={(e) => setName(e.target.value)}
           placeholder="ชื่อหมวดหมู่"
         />
-        <button className="btn btn-primary">เพิ่ม</button>
+        <button className="btn btn-primary" disabled={loading}>
+          {loading ? "..." : "เพิ่ม"}
+        </button>
       </form>
 
       <table className="table table-bordered">
         <thead>
           <tr>
-            <th>ID</th>
+            <th style={{ width: 120 }}>ID</th>
             <th>ชื่อ</th>
-            <th>ลบ</th>
+            <th style={{ width: 120 }}>ลบ</th>
           </tr>
         </thead>
         <tbody>
@@ -61,6 +130,7 @@ export default function AdminCategories() {
               <td>
                 <button
                   className="btn btn-danger btn-sm"
+                  disabled={loading}
                   onClick={() => deleteCategory(c.categoriesID)}
                 >
                   ลบ
@@ -68,6 +138,13 @@ export default function AdminCategories() {
               </td>
             </tr>
           ))}
+          {categories.length === 0 && (
+            <tr>
+              <td colSpan={3} className="text-center text-muted">
+                ไม่มีข้อมูล
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
